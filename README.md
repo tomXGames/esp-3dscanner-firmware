@@ -1,2 +1,2 @@
 # ESP-3D-Scanner Firmware
-This is the repository for my ESP32-based 3DScanner. Print <a href="https://www.thingiverse.com/thing:4167615">these Files</a> and use a ESP32 instead of an Arduino. Then install the corresponding <a href="www.github.com/esp-3dscanner-app">App</a>  (only works on Android!). 
+This is the repository for my ESP32-based 3DScanner. Print <a href="https://www.thingiverse.com/thing:4167615">these Files</a> and use a ESP32 instead of an Arduino. Then install the corresponding <a href="https://github.com/tomXGames/esp-3dscanner-app">App</a>  (only works on Android!). 
