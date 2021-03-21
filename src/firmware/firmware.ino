@@ -1,9 +1,3 @@
-//This example code is in the Public Domain (or CC0 licensed, at your option.)
-//By Evandro Copercini - 2018
-//
-//This example creates a bridge between Serial and Classical Bluetooth (SPP)
-//and also demonstrate that SerialBT have the same functionalities of a normal Serial
-
 #include "BluetoothSerial.h"
 
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
@@ -11,12 +5,16 @@
 #endif
 
 #include <Stepper.h>
-const int stepsScale = 2400;
-Stepper stepper = Stepper(stepsScale, 18,19,22,23);
-int noSteps=1;
-
+const int stepsPerRevolution = 2048;
+int motorPin1 = 13;
+int motorPin2 = 12;
+int motorPin3 = 14;
+int motorPin4 = 27;
+Stepper stepper(stepsPerRevolution, motorPin1, motorPin2, motorPin3, motorPin4);
+int noSteps;
 BluetoothSerial SerialBT;
-
+bool turning = true;
+int motorSpeed = 2;
 void setup() {
   Serial.begin(115200);
   SerialBT.begin("ESP32test"); //Bluetooth device name
@@ -24,13 +22,70 @@ void setup() {
 }
 
 void loop() {
-  String str = SerialBT.readString();
-  if (str == "go") {
-    stepper1.step(4.4 * stepsScale / noSteps);
-    delay(500);
+  if (SerialBT.available() > 0) {
+    String str = SerialBT.readString();
+    Serial.println(str);
+    if (str == "go\n") {
+      turning = true;
+    }
+    else if (str == "stop") {
+      turning = false;
+    }
+    else if(str != ""){
+      motorSpeed = str.toInt();
+    }
   }
-  else {
-    noSteps = (str.substring(0, str.length() - 1)).toInt();
+  if (turning) {
+    turn();
   }
-  stepper.step(stepsScale/noSteps);
+}
+void turn() {
+  // 1
+  digitalWrite(motorPin4, HIGH);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin1, LOW);
+  delay(motorSpeed);
+  // 2
+  digitalWrite(motorPin4, HIGH);
+  digitalWrite(motorPin3, HIGH);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin1, LOW);
+  delay (motorSpeed);
+  // 3
+  digitalWrite(motorPin4, LOW);
+  digitalWrite(motorPin3, HIGH);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin1, LOW);
+  delay(motorSpeed);
+  // 4
+  digitalWrite(motorPin4, LOW);
+  digitalWrite(motorPin3, HIGH);
+  digitalWrite(motorPin2, HIGH);
+  digitalWrite(motorPin1, LOW);
+  delay(motorSpeed);
+  // 5
+  digitalWrite(motorPin4, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin2, HIGH);
+  digitalWrite(motorPin1, LOW);
+  delay(motorSpeed);
+  // 6
+  digitalWrite(motorPin4, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin2, HIGH);
+  digitalWrite(motorPin1, HIGH);
+  delay (motorSpeed);
+  // 7
+  digitalWrite(motorPin4, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin1, HIGH);
+  delay(motorSpeed);
+  // 8
+  digitalWrite(motorPin4, HIGH);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin1, HIGH);
+  delay(motorSpeed);
 }
