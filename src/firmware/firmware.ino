@@ -38,6 +38,8 @@ void loop() {
   if (turning) {
     turn();
   }
+//  stepper.step(stepsPerRevolution);
+//  delay(500);
 }
 void turn() {
   // 1
